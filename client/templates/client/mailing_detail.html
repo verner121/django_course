@@ -1,0 +1,21 @@
+{% extends 'client/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p class="card-text">Дата и время первой отправки: {{ mailing.datetime_of_first_send }} </p>
+                        <p>Дата и время окончания отправки: {{ mailing.datetime_end_of_send }} </p>
+                        <p>Статус: {{ mailing.is_status }}</p>
+                        <p>Сообщение: {{ mailing.messages }} </p>
+                        <p>Получатели: {{ mailing.clients }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
