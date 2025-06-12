@@ -1,25 +1,11 @@
-{% extends 'client/base.html' %}
+{% extends 'base.html' %}
 {% block title %}Удалить клиента{% endblock %}
 {% block content %}
-<div class="container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div class="col-6">
-            <div class="card shadow-sm">
-                <form class="row" method="post" enctype="multipart/form-data">
-                    <div class="card">
-                        <p class="card-text">Вы действительно хотите удалить "{{ client.first_name }}" ? </p>
-                        <div class="card-body">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
-                                <a class="btn btn-sm btn-outline-primary" href="{% url 'client:client_list' %}" role="button">Отмена</a>
-                            </div>
-                        </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    {% endblock %}
+<h2>Удаление клиента</h2>
+<p class="mb-3">Вы точно хотите удалить <strong>{{ object.full_name }}</strong>?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Удалить</button>
+  <a href="{% url 'clients:client_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

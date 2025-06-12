@@ -4,8 +4,8 @@ from .models import Client, Message
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'patronymic')
-    search_fields = ('first_name', 'last_name', 'patronymic')
+    list_display = ("email", "full_name")
+    search_fields = ("email", "full_name")
 
 
 @admin.register(Message)

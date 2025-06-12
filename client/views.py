@@ -13,18 +13,31 @@ class ClientCreateView(CreateView):
     template_name = 'client/client_form.html'
     success_url = reverse_lazy('client:client_list')
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 class ClientListView(ListView):
     model = Client
     template_name = 'client/client_list.html'
-    context_object_name = 'clients'
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Менеджеры").exists():
+            return Client.objects.all()
+        return Client.objects.filter(owner=user)
 
 
 class ClientDetailView(DetailView):
     model = Client
     template_name = 'client/client_detail.html'
-    context_object_name = 'client'
-    success_url = reverse_lazy('client:client_list')
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Менеджеры").exists():
+            return Client.objects.all()
+        return Client.objects.filter(owner=user)
 
 
 class ClientUpdateView(UpdateView):
@@ -33,11 +46,17 @@ class ClientUpdateView(UpdateView):
     template_name = 'client/client_form.html'
     success_url = reverse_lazy('client:client_list')
 
+    def get_queryset(self):
+        return Client.objects.filter(owner=self.request.user)
+
 
 class ClientDeleteView(DeleteView):
     model = Client
     template_name = 'client/client_delete.html'
     success_url = reverse_lazy('client:client_list')
+
+    def get_queryset(self):
+        return Client.objects.filter(owner=self.request.user)
 
 
 class MessageCreateView(CreateView):
@@ -47,27 +66,27 @@ class MessageCreateView(CreateView):
     success_url = reverse_lazy('client:message_list')
 
 
-class  MessageListView(ListView):
+class MessageListView(ListView):
     model = Message
     template_name = 'client/message_list.html'
     context_object_name = 'messages'
 
 
-class  MessageDetailView(DetailView):
+class MessageDetailView(DetailView):
     model = Message
     template_name = 'client/message_detail.html'
     context_object_name = 'message'
     success_url = reverse_lazy('client:message_list')
 
 
-class  MessageUpdateView(UpdateView):
+class MessageUpdateView(UpdateView):
     model = Message
     form_class = MessageForm
     template_name = 'client/message_form.html'
     success_url = reverse_lazy('client:message_list')
 
 
-class  MessageDeleteView(DeleteView):
+class MessageDeleteView(DeleteView):
     model = Message
     template_name = 'client/message_delete.html'
     success_url = reverse_lazy('client:message_list')
@@ -80,27 +99,27 @@ class MailingCreateView(CreateView):
     success_url = reverse_lazy('client:mailing_list')
 
 
-class  MailingListView(ListView):
+class MailingListView(ListView):
     model = Mailing
     template_name = 'client/mailing_list.html'
     context_object_name = 'mailings'
 
 
-class  MailingDetailView(DetailView):
+class MailingDetailView(DetailView):
     model = Mailing
     template_name = 'client/mailing_detail.html'
     context_object_name = 'mailing'
     success_url = reverse_lazy('client:mailing_list')
 
 
-class  MailingUpdateView(UpdateView):
+class MailingUpdateView(UpdateView):
     model = Mailing
     form_class = MailingForm
     template_name = 'client/mailing_form.html'
     success_url = reverse_lazy('client:mailing_list')
 
 
-class  MailingDeleteView(DeleteView):
+class MailingDeleteView(DeleteView):
     model = Mailing
     template_name = 'client/mailing_delete.html'
     success_url = reverse_lazy('client:mailing_list')

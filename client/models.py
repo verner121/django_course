@@ -1,14 +1,21 @@
+from django.conf import settings
 from django.db import models
+
 
 class Client(models.Model):
     email = models.EmailField(max_length=150, unique=True, verbose_name='Email', help_text='Введите ваш email')
-    first_name = models.CharField(max_length=50, verbose_name='Имя', help_text='Введите ваше имя')
-    last_name = models.CharField(max_length=150, verbose_name='Фамилия', help_text='Введите вашу фамилию')
-    patronymic = models.CharField(max_length=100, verbose_name='Отчество', help_text='Введите ваше отчество')
-    comment = models.TextField(verbose_name='Комментарий', help_text='Напишите вам комментарий')
+    full_name = models.CharField(max_length=100, verbose_name='Ф.И.О.',
+                                 help_text='Введите ваше Имя, Фамилию и Отчество')
+    comment = models.TextField(blank=True, verbose_name='Комментарий', help_text='Напишите вам комментарий')
+
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="clients",
+    )
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name} {self.patronymic}'
+        return f'{self.full_name} - {self.email}'
 
     class Meta:
         verbose_name = 'Клиент'
@@ -18,6 +25,12 @@ class Client(models.Model):
 class Message(models.Model):
     subject = models.CharField(max_length=200, verbose_name='Тема письма', help_text='Напишите тему письма')
     body = models.TextField(verbose_name='Тело письма', help_text='Напишите содержимое письма')
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="messages",
+        default=1,
+    )
 
     def __str__(self):
         return self.subject
@@ -25,6 +38,7 @@ class Message(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
+
 
 class Mailing(models.Model):
     STATUS_CHOICES = [
@@ -37,9 +51,25 @@ class Mailing(models.Model):
     is_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Создана')
     messages = models.ForeignKey(Message, on_delete=models.CASCADE)
     clients = models.ManyToManyField(Client)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="mailings",
+    )
 
     def __str__(self):
         return f"Рассылка {self.pk} ({self.is_status})"
 
 
+class MailingAttempt(models.Model):
+    STATUS_CHOICES = [
+        ('Успешно', 'Успешно'),
+        ('Не успешно', 'Не успешно'),
+    ]
+    datetime_attempt = models.DateTimeField()
+    is_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Успешно')
+    mail_server_response = models.TextField()
+    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"Попытка {self.mailing_id} - {self.is_status}"

@@ -1,21 +1,13 @@
-{% extends 'client/base.html' %}
-{% load my_tags %}
+{% extends 'base.html' %}
+{% block title %}Инфо о клиенте{% endblock %}
 {% block content %}
-<div class="album py-5 bg-body-tertiary">
-    <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            <div class="col">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <p class="card-text">Имя: {{ client.first_name }} </p>
-                        <p>Фамилия: {{ client.last_name }} </p>
-                        <p> Отчество: {{ client.patronymic }}</p>
-                        <p>Email: {{ client.email }} </p>
-                        <p> Сообщение: {{ client.comment }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<h2 class="mb-3">{{ object.full_name }}</h2>
+<p><strong>Email:</strong> {{ object.email }}</p>
+<p><strong>Комментарий:</strong> {{ object.comment }}</p>
+
+<div class="mt-4">
+  <a href="{% url 'clients:client_update' object.pk %}" class="btn btn-warning">Редактировать</a>
+  <a href="{% url 'clients:client_delete' object.pk %}" class="btn btn-danger">Удалить</a>
+  <a href="{% url 'clients:client_list' %}" class="btn btn-secondary">← Назад</a>
 </div>
 {% endblock %}
