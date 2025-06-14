@@ -6,7 +6,7 @@ class Client(models.Model):
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=200, verbose_name='Ф.И.О.', help_text='Введите свое Ф.И.О.')
     comment = models.TextField()
-    owner = models.ForeignKey(  # ← связь с пользователем
+    owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="clients",
