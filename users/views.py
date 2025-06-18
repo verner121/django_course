@@ -11,12 +11,14 @@ from .forms import CustomUserCreationForm
 
 
 class RegisterView(CreateView):
+    """Класс для регистрации пользователя"""
     model = CustomUser
     form_class = CustomUserCreationForm
     template_name = "users/register.html"
     success_url = reverse_lazy("users:login")
 
     def form_valid(self, form):
+        """Переопределение метода валидации"""
         response = super().form_valid(form)
         print("Пробую отправить письмо на:", form.cleaned_data["email"])
         print("SMTP USER:", repr(settings.EMAIL_HOST_USER))
@@ -39,26 +41,33 @@ class RegisterView(CreateView):
 
 
 class CustomLoginView(LoginView):
+    """Класс для входа пользователя в систему"""
     template_name = "users/login.html"
 
 
 class CustomLogoutView(LogoutView):
+    """Класс для выхода пользователя в систему"""
     next_page = reverse_lazy("mailings:home")
 
 
 class ProfileView(LoginRequiredMixin, DetailView):
+    """Класс для отображения профиля пользователя в системе"""
     model = CustomUser
     template_name = "users/profile.html"
 
     def get_object(self):
+        """Переопределение метода получения объекта"""
         return self.request.user
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    """Класс для изменения профиля пользователя в системе"""
+
     model = CustomUser
     fields = ["username", "email"]
     template_name = "users/profile_form.html"
     success_url = reverse_lazy("users:profile")
 
     def get_object(self):
+        """Переопределение метода получения объекта"""
         return self.request.user

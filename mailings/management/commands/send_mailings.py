@@ -5,9 +5,11 @@ from mailings.models import Mailing, MailingAttempt
 
 
 class Command(BaseCommand):
+    """Кастомная команда по отправке всех активных рассылок"""
     help = "Отправляет все активные рассылки"
 
     def handle(self, *args, **options):
+        """Метод отправки активных рассылок"""
         now = timezone.now()
         mailings = Mailing.objects.filter(
             status="Создана", start_time__lte=now, end_time__gte=now

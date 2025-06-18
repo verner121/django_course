@@ -4,6 +4,7 @@ from django.conf import settings
 
 
 class Message(models.Model):
+    """Модель - Сообщения"""
     subject = models.CharField(max_length=255)
     body = models.TextField()
     owner = models.ForeignKey(
@@ -14,10 +15,12 @@ class Message(models.Model):
     )
 
     def __str__(self):
+        """Строковое представление сообщения"""
         return self.subject
 
 
 class Mailing(models.Model):
+    """Модель - Рассылки"""
     STATUS_CHOICES = [
         ("Создана", "Создана"),
         ("Запущена", "Запущена"),
@@ -36,10 +39,12 @@ class Mailing(models.Model):
     )
 
     def __str__(self):
+        """Строковое представление рассылки"""
         return f"Рассылка {self.pk} ({self.status})"
 
 
 class MailingAttempt(models.Model):
+    """Модель - Попытка рассылок"""
     STATUS_CHOICES = [
         ("Успешно", "Успешно"),
         ("Не успешно", "Не успешно"),
@@ -53,4 +58,5 @@ class MailingAttempt(models.Model):
     )
 
     def __str__(self):
+        """Строковое представление попыток рассылки"""
         return f"Попытка {self.mailing_id} - {self.status}"

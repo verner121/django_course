@@ -6,9 +6,11 @@ from client.models import Client
 
 
 class Command(BaseCommand):
+    """Кастомная команда по созданию группы Менеджеры с нужными правами"""
     help = "Создаёт группу Менеджеры с нужными правами"
 
     def handle(self, *args, **kwargs):
+        """Создание прав доступа"""
         group, created = Group.objects.get_or_create(name="Менеджеры")
         if created:
             self.stdout.write(self.style.SUCCESS('✅ Группа "Менеджеры" создана'))
